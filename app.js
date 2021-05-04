@@ -16,8 +16,8 @@ noImage.src = './image/noImage.jpg';
 //noImage.src ='https://app-bsale-eduardopoblete.herokuapp.com/'
 
 // Ruta para  connexión a la API del backend
-const url = "https://app-bsale-eduardopoblete.herokuapp.com/api/product";
-const urlCategory = "https://app-bsale-eduardopoblete.herokuapp.com/api/category";
+const url = "http://app-bsale-eduardopoblete.herokuapp.com/api/product";
+const urlCategory = "http://app-bsale-eduardopoblete.herokuapp.com/api/category";
 
 //evento que se dispara cuando se aprieta cualquier tecla dentro del input buscador
 //captura lo que va escribiendo el usuario y lo va guardando en una variable
