@@ -13,5 +13,11 @@
 
 
 #btnCarrito{
-  margin-bottom: 20px;
+  background-color:#e98b58;
+  color: white;
+  float: right;
+}
+
+#categories {
+  padding-bottom: 15px;
 }

@@ -8,7 +8,12 @@ const items = document.getElementById("items");
 const footer = document.getElementById("footer");
 const buscar = document.getElementById("buscador");
 const categories = document.getElementById("categories");
+const btnCarrito = document.getElementById("btnCarrito");
 let carrito = {};
+let allProduct = {};
+const noImage = new Image();
+noImage.src = './image/noImage.jpg';
+//noImage.src ='https://app-bsale-eduardopoblete.herokuapp.com/'
 
 // Ruta para  connexión a la API del backend
 const url = "https://app-bsale-eduardopoblete.herokuapp.com/api/product";
@@ -45,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
       let data = JSON.parse(this.responseText);
+      allProduct = data
       console.log(data);
       loadData(data);
     }
@@ -61,7 +67,11 @@ const loadData = (data) => {
   Object.values(data).forEach((producto) => {
     templateCard.querySelector("h5").textContent = producto.name;
     templateCard.querySelector("p").textContent = producto.price;
-    templateCard.querySelector("img").setAttribute("src", producto.url_image);
+    if(producto.url_image==null || producto.url_image == "") {
+      templateCard.querySelector("img").setAttribute("src",noImage.src);
+    }else{
+      templateCard.querySelector("img").setAttribute("src",producto.url_image);
+    }
     templateCard.querySelector(".btn-dark").dataset.id = producto.id;
     const clone = templateCard.cloneNode(true);
     fragment.appendChild(clone);
@@ -112,8 +122,7 @@ const agregarCarrtito = () => {
     templateCarrito.querySelectorAll("td")[1].textContent = producto.cantidad;
     templateCarrito.querySelector(".btn-info").dataset.id = producto.id;
     templateCarrito.querySelector(".btn-danger").dataset.id = producto.id;
-    templateCarrito.querySelector("span").textContent =
-      producto.cantidad * producto.precio;
+    templateCarrito.querySelector("span").textContent = producto.cantidad * producto.precio;
 
     const clone = templateCarrito.cloneNode(true);
     fragment.appendChild(clone);
@@ -132,20 +141,16 @@ const agregarFooter = () => {
   }
 
   //calculos de acumulador de productos
-  const nCantidad = Object.values(carrito).reduce(
-    (acc, { cantidad }) => acc + cantidad,
-    0
-  );
+  const nCantidad = Object.values(carrito).reduce(   (acc, { cantidad }) => acc + cantidad,0);
 
   //con el acumulador de productos anterior podremos calcular el total del producto en función de la cantidad comprada.
   const nTotal = Object.values(carrito).reduce(
-    (acc, { precio, cantidad }) => acc + precio * cantidad,
-    0
-  );
+    (acc, { precio, cantidad }) => acc + precio * cantidad, 0 );
 
   //se añade la cantidad de productos y el total de la compra al templateFooter
   templateFooter.querySelectorAll("td")[0].textContent = nCantidad;
   templateFooter.querySelector("span").textContent = nTotal;
+  btnCarrito.textContent =(`Ver Carrito 🛒 ( ${nCantidad} )`)
 
   const clone = templateFooter.cloneNode(true);
   fragment.appendChild(clone);
@@ -214,7 +219,7 @@ const loadCategory = (data) => {
   });
   document.querySelector(
     "#categories"
-  ).innerHTML += `<button type="button" class="btn btn-success">Sacar Filtro</button>&nbsp`;
+  ).innerHTML += `<button type="button" class="btn btn-success">SACAR FILTRO</button>&nbsp`;
 };
 
 //Función que captura el botón de la categoría donde se realizo el click
@@ -223,7 +228,7 @@ categories.addEventListener("click", (e) => {
   const category_name = e.target.innerText.toLowerCase();
   console.log(category_name);
   if (category_name === "sacar filtro") {
-    location.reload();
+    loadData(allProduct)
   } else {
     var xhr = new XMLHttpRequest(),
       method = "GET",
